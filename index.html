@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宇千鹤 - 客户端下载与使用教程</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif],
+                    },
+                    colors: {
+                        brand: {
+                            light: '#007aff',
+                            dark: '#3b82f6',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --page-bg: #f5f5f7;
+            --bg-glow: rgba(59, 130, 246, 0.3);
+            --bg-glow-2: rgba(147, 51, 234, 0.3);
+            --panel-bg: rgba(255, 255, 255, 0.6);
+            --panel-border: rgba(0, 0, 0, 0.05);
+            --panel-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        }
+
+        .dark {
+            --page-bg: #000000;
+            --bg-glow: rgba(59, 130, 246, 0.04);
+            --bg-glow-2: rgba(147, 51, 234, 0.03);
+            --panel-bg: rgba(0, 0, 0, 0.72);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --panel-shadow: 0 18px 48px rgba(0,0,0,0.55);
+        }
+
+        html, body {
+            background: var(--page-bg);
+        }
+
+        /* 动态渐变背景光晕 */
+        .bg-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: pulse 10s infinite alternate;
+            pointer-events: none;
+        }
+        .dark .bg-glow {
+            opacity: 0.24;
+            filter: blur(160px);
+        }
+        .glow-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--bg-glow); }
+        .glow-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: var(--bg-glow-2); }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.4; }
+            100% { transform: scale(1.1); opacity: 0.7; }
+        }
+
+        /* 毛玻璃面板 */
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            box-shadow: var(--panel-shadow);
+            transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dark .glass-panel:hover {
+            border-color: rgba(255, 255, 255, 0.14);
+            background: rgba(10, 10, 10, 0.9);
+            box-shadow: 0 20px 56px rgba(0,0,0,0.7);
+        }
+        
+        /* 浅色模式下的毛玻璃 */
+        .glass-panel-light {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dark .glass-panel-light {
+            box-shadow: var(--panel-shadow);
+        }
+        .light .glass-panel-light:hover {
+            border-color: rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        }
+        .dark .glass-panel-light:hover {
+            border-color: rgba(255, 255, 255, 0.14);
+            background: rgba(10, 10, 10, 0.9);
+            box-shadow: 0 20px 56px rgba(0,0,0,0.7);
+        }
+
+        /* 苹果风格按钮 */
+        .btn-apple {
+            background: #1d1d1f;
+            color: #f5f5f7;
+            border-radius: 980px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .btn-apple:hover {
+            background: #000000;
+            transform: scale(1.02);
+        }
+        .dark .btn-apple {
+            background: #f5f5f7;
+            color: #000000;
+        }
+        .dark .btn-apple:hover {
+            background: #ffffff;
+        }
+
+        /* 模态窗口和遮罩层样式 */
+        #modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        #modal-content {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .modal-open #modal-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-open #modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        /* 教程文本高亮 */
+        .highlight {
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        .light .highlight {
+            color: #007aff;
+        }
+    </style>
+</head>
+<body class="light antialiased selection:bg-brand-light selection:text-white pb-20 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden">
+
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <nav class="fixed top-0 w-full z-50 glass-panel border-t-0 border-l-0 border-r-0 rounded-none rounded-b-2xl py-4 lg:py-5">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div class="text-xl md:text-2xl font-bold tracking-wider text-black dark:text-white">宇千鹤</div>
+            
+            <div class="flex items-center space-x-6">
+                <div class="space-x-8 text-sm font-medium text-gray-700 hidden lg:block dark:text-gray-300">
+                    <a href="#official" class="hover:text-black dark:hover:text-white transition">定制客户端</a>
+                    <a href="#thirdparty" class="hover:text-black dark:hover:text-white transition">第三方客户端</a>
+                    <a href="#tutorial" class="hover:text-black dark:hover:text-white transition">通用教程</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-16 px-6 text-center max-w-4xl mx-auto mt-12 md:mt-16 lg:pt-40">
+        <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8 bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 dark:from-white dark:to-gray-500">
+            连接无界，畅享自由。
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-700 dark:text-gray-400 mb-10 leading-relaxed font-light max-w-3xl mx-auto">
+            请在下方选择您的客户端卡片，点击即可查看专门的使用教程与下载链接。<br class="hidden md:block">
+            全平台覆盖，提供纯粹、极速的网络体验。
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 space-y-24">
+
+        <section id="official">
+            <div class="mb-12 text-center">
+                <div class="inline-block bg-brand-light/10 text-brand-light dark:bg-brand-dark/15 dark:text-brand-dark px-4 py-2 rounded-full text-sm font-medium mb-3">
+                    定制客户端超级方便，推荐大家赶快使用
+                </div>
+                <h2 class="text-3xl md:text-4xl font-semibold mb-3 text-black dark:text-white">官方定制客户端卡片</h2>
+                <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg">简单易用，免除配置烦恼，无需更新订阅，点击卡片继续</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <button onclick="openModal('custom-windows')" class="glass-panel-light p-10 flex flex-col items-center text-center group text-left w-full hover:border-brand-light dark:hover:border-brand-dark">
+                    <div class="w-20 h-20 mb-8 flex items-center justify-center rounded-3xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                        <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.951-1.801"/></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3 text-black dark:text-white">Windows</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-8 flex-grow">支持 Windows 10/11 系统</p>
+                    <span class="text-brand-light dark:text-brand-dark font-medium group-hover:underline">点击查看教程</span>
+                </button>
+
+                <button onclick="openModal('custom-macos-m')" class="glass-panel-light p-10 flex flex-col items-center text-center group text-left w-full hover:border-brand-light dark:hover:border-brand-dark">
+                    <div class="w-20 h-20 mb-8 flex items-center justify-center rounded-3xl bg-gray-500/10 text-gray-800 dark:text-gray-300">
+                        <svg class="w-10 h-10" fill="currentColor" viewBox="-2 0 24 24" aria-hidden="true"><path d="m20.091 17.524c-.451 1.375-1.053 2.569-1.805 3.651l.03-.046q-1.861 2.827-3.706 2.827c-.739-.052-1.426-.217-2.064-.478l.044.016c-.642-.267-1.387-.434-2.167-.461h-.011c-.747.029-1.447.201-2.083.49l.035-.014c-.556.269-1.204.445-1.889.49l-.015.001q-2.192 0-4.342-3.735c-1.269-2.072-2.048-4.565-2.12-7.236v-.02c-.005-.107-.008-.233-.008-.36 0-1.892.614-3.641 1.654-5.059l-.017.024c.92-1.266 2.395-2.08 4.061-2.08h.037-.002c.922.031 1.796.187 2.621.452l-.068-.019c.578.201 1.252.354 1.95.428l.041.004c.759-.067 1.459-.241 2.111-.508l-.048.017c.738-.279 1.591-.456 2.48-.49h.015.07c1.123 0 2.164.351 3.019.949l-.017-.011c.572.416 1.066.89 1.488 1.424l.012.016c-.62.5-1.161 1.059-1.627 1.678l-.017.024c-.587.823-.938 1.85-.938 2.958v.029-.001.062c0 1.181.373 2.275 1.007 3.171l-.012-.017c.53.842 1.316 1.481 2.248 1.814l.031.01zm-5.423-16.918c-.02.712-.172 1.383-.432 1.998l.014-.036c-.323.778-.776 1.441-1.34 1.992l-.001.001c-.423.452-.944.807-1.53 1.031l-.028.009c-.437.12-.949.207-1.475.243l-.025.001c0-.008 0-.018 0-.028 0-1.372.42-2.647 1.139-3.701l-.015.023c.874-1.114 2.132-1.891 3.572-2.134l.034-.005c.013.043.026.097.035.152l.001.008c.01.063.023.117.039.17l-.003-.01q0 .058.007.144t.007.142z"/></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3 text-black dark:text-white">macOS (M 芯片)</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-8 flex-grow">专为 Apple Silicon 优化</p>
+                    <span class="text-brand-light dark:text-brand-dark font-medium group-hover:underline">点击查看教程</span>
+                </button>
+
+                <button onclick="openModal('custom-macos-intel')" class="glass-panel-light p-10 flex flex-col items-center text-center group text-left w-full hover:border-brand-light dark:hover:border-brand-dark">
+                    <div class="w-20 h-20 mb-8 flex items-center justify-center rounded-3xl bg-gray-500/10 text-gray-800 dark:text-gray-300">
+                        <svg class="w-10 h-10" fill="currentColor" viewBox="-2 0 24 24" aria-hidden="true"><path d="m20.091 17.524c-.451 1.375-1.053 2.569-1.805 3.651l.03-.046q-1.861 2.827-3.706 2.827c-.739-.052-1.426-.217-2.064-.478l.044.016c-.642-.267-1.387-.434-2.167-.461h-.011c-.747.029-1.447.201-2.083.49l.035-.014c-.556.269-1.204.445-1.889.49l-.015.001q-2.192 0-4.342-3.735c-1.269-2.072-2.048-4.565-2.12-7.236v-.02c-.005-.107-.008-.233-.008-.36 0-1.892.614-3.641 1.654-5.059l-.017.024c.92-1.266 2.395-2.08 4.061-2.08h.037-.002c.922.031 1.796.187 2.621.452l-.068-.019c.578.201 1.252.354 1.95.428l.041.004c.759-.067 1.459-.241 2.111-.508l-.048.017c.738-.279 1.591-.456 2.48-.49h.015.07c1.123 0 2.164.351 3.019.949l-.017-.011c.572.416 1.066.89 1.488 1.424l.012.016c-.62.5-1.161 1.059-1.627 1.678l-.017.024c-.587.823-.938 1.85-.938 2.958v.029-.001.062c0 1.181.373 2.275 1.007 3.171l-.012-.017c.53.842 1.316 1.481 2.248 1.814l.031.01zm-5.423-16.918c-.02.712-.172 1.383-.432 1.998l.014-.036c-.323.778-.776 1.441-1.34 1.992l-.001.001c-.423.452-.944.807-1.53 1.031l-.028.009c-.437.12-.949.207-1.475.243l-.025.001c0-.008 0-.018 0-.028 0-1.372.42-2.647 1.139-3.701l-.015.023c.874-1.114 2.132-1.891 3.572-2.134l.034-.005c.013.043.026.097.035.152l.001.008c.01.063.023.117.039.17l-.003-.01q0 .058.007.144t.007.142z"/></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3 text-black dark:text-white">macOS (Intel)</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-8 flex-grow">适用于 Intel 处理器机型</p>
+                    <span class="text-brand-light dark:text-brand-dark font-medium group-hover:underline">点击查看教程</span>
+                </button>
+
+                <button onclick="openModal('custom-android')" class="glass-panel-light p-10 flex flex-col items-center text-center group text-left w-full hover:border-brand-light dark:hover:border-brand-dark">
+                    <div class="w-20 h-20 mb-8 flex items-center justify-center rounded-3xl bg-green-500/10 text-green-700 dark:text-green-400">
+                        <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997zm-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997zm11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0216 3.5011C15.5492 8.2393 13.821 7.8223 12 7.8223c-1.821 0-3.5492.417-5.1375 1.1256L4.8409 5.4468a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396z"/></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3 text-black dark:text-white">Android</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-8 flex-grow">原生支持安卓移动设备</p>
+                    <span class="text-brand-light dark:text-brand-dark font-medium group-hover:underline">点击查看教程</span>
+                </button>
+            </div>
+        </section>
+
+        <section id="thirdparty" class="mt-8 pt-10 border-t border-gray-100 dark:border-white/10">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl md:text-4xl font-semibold mb-3 text-black dark:text-white">第三方客户端卡片</h2>
+                <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg max-w-2xl mx-auto">优先使用定制客户端。如有进阶需求，点击下方第三方 Clash 卡片获取教程和下载。</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <button onclick="openModal('clash-windows')" class="glass-panel-light p-8 flex flex-col justify-between group text-left w-full hover:border-brand-light dark:hover:border-brand-dark">
+                    <div>
+                        <h3 class="text-lg font-medium mb-1 text-black dark:text-white">Clash Verge</h3>
+                        <p class="text-xs text-gray-500 mb-5 dark:text-gray-400">Windows 系统 (第三方)</p>
+                    </div>
+                    <span class="text-brand-light dark:text-brand-dark text-sm font-medium group-hover:underline">点击查看教程</span>
+                </button>
+
+                <button onclick="openModal('clash-macos-m')" class="glass-panel-light p-8 flex flex-col justify-between group text-left w-full hover:border-brand-light dark:hover:border-brand-dark">
+                    <div>
+                        <h3 class="text-lg font-medium mb-1 text-black dark:text-white">Clash Verge</h3>
+                        <p class="text-xs text-gray-500 mb-5 dark:text-gray-400">macOS (M 芯片) (第三方)</p>
+                    </div>
+                    <span class="text-brand-light dark:text-brand-dark text-sm font-medium group-hover:underline">点击查看教程</span>
+                </button>
+
+                <button onclick="openModal('clash-macos-intel')" class="glass-panel-light p-8 flex flex-col justify-between group text-left w-full hover:border-brand-light dark:hover:border-brand-dark">
+                    <div>
+                        <h3 class="text-lg font-medium mb-1 text-black dark:text-white">Clash Verge</h3>
+                        <p class="text-xs text-gray-500 mb-5 dark:text-gray-400">macOS (Intel) (第三方)</p>
+                    </div>
+                    <span class="text-brand-light dark:text-brand-dark text-sm font-medium group-hover:underline">点击查看教程</span>
+                </button>
+
+                <button onclick="openModal('clash-meta-android')" class="glass-panel-light p-8 flex flex-col justify-between group text-left w-full hover:border-brand-light dark:hover:border-brand-dark">
+                    <div>
+                        <h3 class="text-lg font-medium mb-1 text-black dark:text-white">Clash Meta</h3>
+                        <p class="text-xs text-gray-500 mb-5 dark:text-gray-400">Android 安卓端 (第三方)</p>
+                    </div>
+                    <span class="text-brand-light dark:text-brand-dark text-sm font-medium group-hover:underline">点击查看教程</span>
+                </button>
+            </div>
+        </section>
+
+        <section id="tutorial" class="mt-8 pt-10 border-t border-gray-100 dark:border-white/10">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl md:text-4xl font-semibold mb-3 text-black dark:text-white">通用与其他教程</h2>
+                <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg">IOS用户或关于第三方Clash配置的独立信息</p>
+            </div>
+
+            <div class="space-y-6 max-w-6xl mx-auto">
+                <div class="glass-panel-light p-8 md:p-10 border-gray-100 dark:border-white/10">
+                    <h3 class="text-2xl font-medium mb-5 flex items-center text-black dark:text-white">
+                        <span class="text-gray-400 mr-4 text-xl font-light">01</span>
+                        iOS 用户
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-base mb-4">
+                        还是跟以前一样使用 Shadowrocket，简称：“小火箭”。使用很简单：
+                    </p>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-base bg-gray-50 p-5 rounded-2xl dark:bg-black border border-gray-100 dark:border-white/10">
+                        手机使用<strong>谷歌浏览器</strong>访问官网，在 <span class="highlight">用户中心 — 快速添加节点 — Clash</span>，然后找到 <span class="highlight">“一键导入”</span> 选择 <span class="highlight">“shadowrocket”</span> 就可以自动配置上最新的节点了。
+                    </p>
+                </div>
+                
+                <div class="glass-panel-light p-8 md:p-10 border-gray-100 dark:border-white/10 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-bl-lg font-medium dark:bg-black dark:text-gray-400 dark:border-l dark:border-b dark:border-white/10">关于第三方</div>
+                    <h3 class="text-2xl font-medium mb-5 text-black dark:text-white flex items-center">
+                        <span class="text-gray-400 mr-4 text-xl font-light">02</span>
+                        第三方：Clash Verge/Meta 配置通则
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-base">
+                        一定要使用<strong>谷歌浏览器</strong>登录我们的官网。找到用户中心的 <span class="highlight">“快速添加节点”</span>，然后看到 <span class="highlight">“CLASH”</span> 这个标签。点击 <span class="highlight">“一键导入”</span> 按钮，选择 <span class="highlight">“clash”</span>。弹出客户端后点击确定，就会自动配置。最后在 Clash Verge <span class="highlight">“首页”</span> 中开启 <span class="highlight">“系统代理”</span> 就可以了。
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="mt-28 border-t border-gray-100 py-10 pb-8 text-center text-gray-500 text-sm dark:border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <p>© 2026 宇千鹤. 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <div id="modal-container" class="fixed inset-0 z-[100] hidden overflow-y-auto w-screen h-screen">
+        <div id="modal-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeModal()"></div>
+        
+        <div class="flex items-center justify-center min-h-full p-6 w-full h-full">
+            <div id="modal-content" class="relative glass-panel-light max-w-2xl w-full p-8 md:p-10 shadow-3xl bg-white dark:bg-black scale-95 opacity-0 transition-all duration-300 overflow-y-auto max-h-[90vh]">
+                <button onclick="closeModal()" class="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition text-gray-500 dark:text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                
+                <h3 id="modal-title" class="text-2xl md:text-3xl font-semibold mb-6 pr-10 text-black dark:text-white"></h3>
+                
+                <div id="modal-tutorial-content" class="text-gray-700 dark:text-gray-300 leading-relaxed text-base space-y-4 mb-10 prose prose-invert max-w-none prose-ol:list-decimal prose-ol:list-inside">
+                    </div>
+                
+                <div class="border-t border-gray-100 pt-8 dark:border-white/10">
+                    <a id="modal-download-btn" href="#" target="_blank" class="btn-apple w-full py-4 text-center block text-base">点我下载</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 将用户提供的文本信息对应到每个客户端卡片
+        const clientData = {
+            'custom-windows': {
+                title: '宇千鹤定制 Windows 客户端教程',
+                downloadUrl: 'url_for_windows_custom.exe',
+                tutorial: `
+                    <ol class="list-decimal list-inside space-y-3">
+                        <li>首先卸载所有的杀毒软件，关闭系统自带的杀毒软件和防火墙。</li>
+                        <li>点击下方 <span class="highlight">“点我下载”</span> 按钮获取我们的 Windows 定制客户端。</li>
+                        <li>下载好以后鼠标右键解压客户端文件。</li>
+                        <li>你会看到类似 <span class="highlight">“宇千鹤.exe”</span> 这个文件。</li>
+                        <li>找到以后，在此文件上鼠标右键，选择 <span class="highlight">“以管理员身份运行”</span>。</li>
+                        <li>登录您在官网的邮箱账号和密码。</li>
+                        <li>进入以后选择喜欢的节点，点击 <span class="highlight">“连接”</span> 按钮即可代理上网。</li>
+                    </ol>`
+            },
+            'custom-macos-m': {
+                title: '宇千鹤定制 macOS (M芯片) 教程',
+                downloadUrl: 'url_for_macos_m_custom.dmg',
+                tutorial: `
+                    <p class="text-sm italic mb-4">注：可以在点击苹果 logo 然后 “关于本机” 查看自己的芯片版本。</p>
+                    <ol class="list-decimal list-inside space-y-3">
+                        <li>双击解压下载的客户端文件。</li>
+                        <li>把解压出来的 mac 客户端直接拖拽到 <span class="highlight">“访达” — “应用程序”</span> 里面。</li>
+                        <li>点击运行 “宇千鹤” 客户端。此时提示类似：<span class="highlight">“无法打开xxx，因为Apple无法检查其是否包含恶意软件”</span>。</li>
+                        <li>点击 <span class="highlight">“好”</span> 或者 <span class="highlight">“完成”</span> (<strong>别点击删除</strong>)。</li>
+                        <li>然后你去 <span class="highlight">“系统设置” — “隐私与安全性”</span>，往下面拉找到 <span class="highlight">“安全性”</span> 这一栏。</li>
+                        <li>会看到有一个 <span class="highlight">“仍要打开”</span> 的按钮，点击此按钮。</li>
+                        <li>输入你的苹果电脑密码就可以正常打开了。</li>
+                        <li>登录上你在官网的邮箱账号和密码。</li>
+                        <li>登录成功以后点击 <span class="highlight">“连接”</span> 就可以正常代理上网了。</li>
+                    </ol>`
+            },
+            'custom-macos-intel': {
+                title: '宇千鹤定制 macOS (Intel芯片) 教程',
+                downloadUrl: 'url_for_macos_intel_custom.dmg',
+                // 使用与 M芯片 相同的教程主体
+                tutorial: ''
+            },
+            'custom-android': {
+                title: '宇千鹤定制 Android 客户端教程',
+                downloadUrl: 'url_for_android_custom.apk',
+                tutorial: `
+                    <p class="leading-relaxed">此定制客户端非常方便，推荐大家使用。</p>
+                    <ol class="list-decimal list-inside space-y-3 mt-4">
+                        <li>直接下载并安装客户端。</li>
+                        <li>登录我们官网的账号和密码。</li>
+                        <li>选好节点。</li>
+                        <li>点击 <span class="highlight">“连接”</span> 按钮即可上网，非常简单。</li>
+                    </ol>`
+            },
+            // 第三方 Clash 的教程使用提供的通则
+            'clash-windows': {
+                title: 'Clash Verge (Windows) 第三方教程',
+                downloadUrl: 'url_for_clash_verge_windows.exe',
+                tutorial: `<p class="italic text-red-500 mb-4 dark:text-red-400">请优先使用定制客户端。如果用不了，再使用此第三方 Clash 版本。</p>` + 
+                            document.getElementById('tutorial').querySelectorAll('.leading-relaxed')[document.getElementById('tutorial').querySelectorAll('.leading-relaxed').length - 1].innerHTML
+            },
+            'clash-macos-m': {
+                title: 'Clash Verge (Mac M芯片) 第三方教程',
+                downloadUrl: 'url_for_clash_verge_macos_m.dmg',
+                tutorial: `<p class="italic text-red-500 mb-4 dark:text-red-400">请优先使用定制客户端。如果用不了，再使用此第三方 Clash 版本。</p>` + 
+                            document.getElementById('tutorial').querySelectorAll('.leading-relaxed')[document.getElementById('tutorial').querySelectorAll('.leading-relaxed').length - 1].innerHTML
+            },
+            'clash-macos-intel': {
+                title: 'Clash Verge (Mac Intel) 第三方教程',
+                downloadUrl: 'url_for_clash_verge_macos_intel.dmg',
+                tutorial: `<p class="italic text-red-500 mb-4 dark:text-red-400">请优先使用定制客户端。如果用不了，再使用此第三方 Clash 版本。</p>` + 
+                            document.getElementById('tutorial').querySelectorAll('.leading-relaxed')[document.getElementById('tutorial').querySelectorAll('.leading-relaxed').length - 1].innerHTML
+            },
+            'clash-meta-android': {
+                title: 'Clash Meta (Android) 第三方教程',
+                downloadUrl: 'url_for_clash_meta_android.apk',
+                tutorial: `<p class="italic text-red-500 mb-4 dark:text-red-400">请优先使用定制客户端。如果用不了，再使用此第三方 Clash 版本。</p>` + 
+                            document.getElementById('tutorial').querySelectorAll('.leading-relaxed')[document.getElementById('tutorial').querySelectorAll('.leading-relaxed').length - 1].innerHTML
+            }
+        };
+        
+        // 由于 Mac Intel 的教程文本过长，JavaScript 数据区做了精简。
+        // 这里手动将 Intel 版的教程设为与 M 版一致，只是链接不同。
+        clientData['custom-macos-intel'].tutorial = clientData['custom-macos-m'].tutorial;
+
+        // 模态窗口邏輯
+        function openModal(clientId) {
+            const data = clientData[clientId];
+            if (!data) return;
+
+            document.getElementById('modal-title').innerHTML = data.title;
+            document.getElementById('modal-tutorial-content').innerHTML = data.tutorial;
+            const downloadBtn = document.getElementById('modal-download-btn');
+            downloadBtn.href = data.downloadUrl;
+            downloadBtn.innerText = `点我下载 ${clientId.split('-')[1].toUpperCase()} 版`; // 动态修改按钮文字
+
+            document.getElementById('modal-container').classList.remove('hidden');
+            document.body.classList.add('modal-open', 'overflow-hidden'); // 禁止主页面滚动
+        }
+
+        function closeModal() {
+            document.getElementById('modal-container').classList.add('hidden');
+            document.body.classList.remove('modal-open', 'overflow-hidden');
+        }
+
+        // 监听 ESC 键关闭模态窗口
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+
+</body>
+</html>
