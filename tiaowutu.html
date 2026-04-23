@@ -440,6 +440,14 @@
             background: linear-gradient(135deg, rgba(168,85,247,0.18), rgba(236,72,153,0.14));
             border-color: rgba(168,85,247,0.35);
         }
+
+        #ttw-mobile-menu:not(.hidden) {
+            animation: ttwNavIn 0.2s ease-out;
+        }
+        @keyframes ttwNavIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="light antialiased selection:bg-brand-light selection:text-white pb-20 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden">
@@ -449,30 +457,43 @@
     <div class="bg-glow glow-3"></div>
 
     <!-- 顶部导航 -->
-    <nav class="fixed top-0 w-full z-50 glass-panel border-t-0 border-l-0 border-r-0 rounded-none rounded-b-2xl py-4 lg:py-5">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <a href="#" class="flex items-center gap-3 group" aria-label="跳舞兔 首页">
+    <nav class="fixed top-0 w-full z-50 glass-panel border-t-0 border-l-0 border-r-0 rounded-none rounded-b-2xl py-3 lg:py-5" aria-label="主导航">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center gap-2">
+            <a href="#" class="flex items-center gap-2 sm:gap-3 group min-w-0" aria-label="跳舞兔 首页">
                 <span class="ttw-logo-badge inline-flex items-center justify-center shrink-0">
                     <img src="assets/ttw-logo.png" alt="跳舞兔" width="40" height="40" class="h-7 w-7 md:h-8 md:w-8 object-contain block" decoding="async">
                 </span>
-                <span class="text-xl md:text-2xl font-bold tracking-wider text-black dark:text-white">跳舞兔</span>
+                <span class="text-lg sm:text-xl md:text-2xl font-bold tracking-wider text-black dark:text-white truncate">跳舞兔</span>
             </a>
 
-            <div class="flex items-center space-x-6">
-                <div class="flex items-center space-x-8 text-sm font-medium text-gray-700 hidden lg:flex dark:text-gray-300">
+            <div class="flex items-center justify-end gap-0.5 sm:gap-1 shrink-0">
+                <div class="hidden lg:flex items-center space-x-8 text-sm font-medium text-gray-700 dark:text-gray-300">
                     <a href="#features" class="hover:text-black dark:hover:text-white transition">产品功能</a>
                     <a href="#screenshots" class="hover:text-black dark:hover:text-white transition">应用截图</a>
                     <a href="#tutorial" class="hover:text-black dark:hover:text-white transition">使用教程</a>
                     <a href="#download" class="hover:text-black dark:hover:text-white transition">立即下载</a>
                     <a href="index.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-500/15 to-cyan-500/15 text-blue-700 dark:text-cyan-300 border border-blue-400/30 hover:from-blue-500/25 hover:to-cyan-500/25 transition">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7m-9 2v8a2 2 0 002 2h2a2 2 0 002-2v-4a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 002 2h2a2 2 0 002-2v-8m-9 4h.01"/></svg>
+                        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7m-9 2v8a2 2 0 002 2h2a2 2 0 002-2v-4a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 002 2h2a2 2 0 002-2v-8m-9 4h.01"/></svg>
                         宇千鹤主站
                     </a>
                 </div>
-                <button id="theme-toggle" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition" aria-label="切换主题">
+                <button type="button" id="theme-toggle" class="p-2.5 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition" aria-label="切换主题">
                     <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2m0 14v2M5.6 5.6l1.4 1.4m10 10l1.4 1.4M3 12h2m14 0h2M5.6 18.4l1.4-1.4m10-10l1.4-1.4M12 7a5 5 0 100 10 5 5 0 000-10z"/></svg>
                     <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
                 </button>
+                <button type="button" id="ttw-nav-toggle" class="lg:hidden p-2.5 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition text-black dark:text-white" aria-expanded="false" aria-controls="ttw-mobile-menu" aria-label="打开菜单">
+                    <svg class="w-6 h-6 ttw-nav-icon-open" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg class="w-6 h-6 ttw-nav-icon-close hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="ttw-mobile-menu" class="lg:hidden hidden border-t border-black/5 dark:border-white/10 max-h-[min(70vh,520px)] overflow-y-auto">
+            <div class="px-4 sm:px-6 py-3 flex flex-col text-sm font-medium text-gray-800 dark:text-gray-200">
+                <a href="#features" class="py-3 border-b border-black/5 dark:border-white/10 hover:text-black dark:hover:text-white">产品功能</a>
+                <a href="#screenshots" class="py-3 border-b border-black/5 dark:border-white/10 hover:text-black dark:hover:text-white">应用截图</a>
+                <a href="#tutorial" class="py-3 border-b border-black/5 dark:border-white/10 hover:text-black dark:hover:text-white">使用教程</a>
+                <a href="#download" class="py-3 border-b border-black/5 dark:border-white/10 hover:text-black dark:hover:text-white">立即下载</a>
+                <a href="index.html" class="mt-2 py-3 px-3 rounded-2xl text-center inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500/15 to-cyan-500/15 text-blue-800 dark:text-cyan-200 border border-blue-400/30 font-semibold">宇千鹤主站</a>
             </div>
         </div>
     </nav>
@@ -962,8 +983,34 @@
         demoModal.addEventListener('click', (e) => {
             if (e.target === demoModal || e.target.id === 'demo-overlay') closeDemo();
         });
+        const ttwMobileNav = { isOpen: () => false, close: () => {} };
+        (function () {
+            const ttwBtn = document.getElementById('ttw-nav-toggle');
+            const ttwPanel = document.getElementById('ttw-mobile-menu');
+            if (ttwBtn && ttwPanel) {
+                const o = ttwBtn.querySelector('.ttw-nav-icon-open');
+                const c = ttwBtn.querySelector('.ttw-nav-icon-close');
+                function ttwSetOpen(open) {
+                    ttwPanel.classList.toggle('hidden', !open);
+                    ttwBtn.setAttribute('aria-expanded', open);
+                    ttwBtn.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+                    o.classList.toggle('hidden', open);
+                    c.classList.toggle('hidden', !open);
+                }
+                ttwBtn.addEventListener('click', () => ttwSetOpen(ttwPanel.classList.contains('hidden')));
+                ttwPanel.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => ttwSetOpen(false)));
+                window.addEventListener('resize', () => { if (window.innerWidth >= 1024) ttwSetOpen(false); });
+                ttwMobileNav.isOpen = () => !ttwPanel.classList.contains('hidden');
+                ttwMobileNav.close = () => ttwSetOpen(false);
+            }
+        })();
+
         document.addEventListener('keydown', e => {
             if (e.key !== 'Escape') return;
+            if (ttwMobileNav.isOpen()) {
+                ttwMobileNav.close();
+                return;
+            }
             if (lightbox.classList.contains('open')) {
                 closeLightbox();
                 return;

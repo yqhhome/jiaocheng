@@ -161,6 +161,15 @@
         .light .highlight {
             color: #007aff;
         }
+
+        /* 移动端主导航展开面板 */
+        #index-mobile-menu:not(.hidden) {
+            animation: mobileNavIn 0.2s ease-out;
+        }
+        @keyframes mobileNavIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="light antialiased selection:bg-brand-light selection:text-white pb-20 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden">
@@ -168,24 +177,37 @@
     <div class="bg-glow glow-1"></div>
     <div class="bg-glow glow-2"></div>
 
-    <nav class="fixed top-0 w-full z-50 glass-panel border-t-0 border-l-0 border-r-0 rounded-none rounded-b-2xl py-4 lg:py-5">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <a href="#" class="flex items-center gap-3 group" aria-label="宇千鹤 首页">
+    <nav class="fixed top-0 w-full z-50 glass-panel border-t-0 border-l-0 border-r-0 rounded-none rounded-b-2xl py-3 lg:py-5" aria-label="主导航">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center gap-3">
+            <a href="#" class="flex items-center gap-2 sm:gap-3 group min-w-0" aria-label="宇千鹤 首页">
                 <img src="assets/logo.png" alt="宇千鹤" width="40" height="40" class="h-9 w-9 md:h-10 md:w-10 rounded-xl object-contain shrink-0 ring-1 ring-black/5 group-hover:ring-black/10 transition-shadow" decoding="async">
-                <span class="text-xl md:text-2xl font-bold tracking-wider text-black dark:text-white">宇千鹤</span>
+                <span class="text-lg sm:text-xl md:text-2xl font-bold tracking-wider text-black dark:text-white truncate">宇千鹤</span>
             </a>
             
-            <div class="flex items-center space-x-6">
-                <div class="space-x-8 text-sm font-medium text-gray-700 hidden lg:block dark:text-gray-300">
+            <div class="flex items-center justify-end gap-1 sm:gap-2">
+                <div class="space-x-8 text-sm font-medium text-gray-700 hidden lg:flex items-center dark:text-gray-300">
                     <a href="https://yqhhome.github.io/" target="_blank" rel="noopener noreferrer" class="hover:text-black dark:hover:text-white transition">官网地址</a>
                     <a href="#official" class="hover:text-black dark:hover:text-white transition">定制客户端</a>
                     <a href="#thirdparty" class="hover:text-black dark:hover:text-white transition">第三方客户端</a>
                     <a href="#tutorial" class="hover:text-black dark:hover:text-white transition">通用教程</a>
                     <a href="tiaowutu.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-500/15 to-pink-500/15 text-purple-700 dark:text-pink-300 border border-purple-400/30 hover:from-purple-500/25 hover:to-pink-500/25 transition">
-                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.39 7.36H22l-6.18 4.49L18.21 22 12 17.27 5.79 22l2.39-8.15L2 9.36h7.61z"/></svg>
+                        <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.39 7.36H22l-6.18 4.49L18.21 22 12 17.27 5.79 22l2.39-8.15L2 9.36h7.61z"/></svg>
                         跳舞兔 福利
                     </a>
                 </div>
+                <button type="button" id="index-nav-toggle" class="lg:hidden p-2.5 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition text-black dark:text-white" aria-expanded="false" aria-controls="index-mobile-menu" aria-label="打开菜单">
+                    <svg class="w-6 h-6 index-nav-icon-open" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg class="w-6 h-6 index-nav-icon-close hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="index-mobile-menu" class="lg:hidden hidden border-t border-black/5 dark:border-white/10 max-h-[min(70vh,520px)] overflow-y-auto">
+            <div class="px-4 sm:px-6 py-3 flex flex-col text-sm font-medium text-gray-800 dark:text-gray-200">
+                <a href="https://yqhhome.github.io/" target="_blank" rel="noopener noreferrer" class="py-3 border-b border-black/5 dark:border-white/10 hover:text-black dark:hover:text-white">官网地址</a>
+                <a href="#official" class="py-3 border-b border-black/5 dark:border-white/10 hover:text-black dark:hover:text-white">定制客户端</a>
+                <a href="#thirdparty" class="py-3 border-b border-black/5 dark:border-white/10 hover:text-black dark:hover:text-white">第三方客户端</a>
+                <a href="#tutorial" class="py-3 border-b border-black/5 dark:border-white/10 hover:text-black dark:hover:text-white">通用教程</a>
+                <a href="tiaowutu.html" class="mt-2 py-3 px-3 rounded-2xl text-center inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500/15 to-pink-500/15 text-purple-800 dark:text-pink-200 border border-purple-400/30 font-semibold">跳舞兔 福利</a>
             </div>
         </div>
     </nav>
@@ -467,9 +489,36 @@
             document.body.classList.remove('modal-open', 'overflow-hidden');
         }
 
-        // 监听 ESC 键关闭模态窗口
+        const indexMobileNav = { isOpen: () => false, close: () => {} };
+        // 移动端主导航
+        (function () {
+            const btn = document.getElementById('index-nav-toggle');
+            const panel = document.getElementById('index-mobile-menu');
+            if (!btn || !panel) return;
+            const openIcon = btn.querySelector('.index-nav-icon-open');
+            const closeIcon = btn.querySelector('.index-nav-icon-close');
+            function setOpen(open) {
+                panel.classList.toggle('hidden', !open);
+                btn.setAttribute('aria-expanded', open);
+                btn.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+                openIcon.classList.toggle('hidden', open);
+                closeIcon.classList.toggle('hidden', !open);
+            }
+            btn.addEventListener('click', () => setOpen(panel.classList.contains('hidden')));
+            panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+            window.addEventListener('resize', () => { if (window.innerWidth >= 1024) setOpen(false); });
+            indexMobileNav.isOpen = () => !panel.classList.contains('hidden');
+            indexMobileNav.close = () => setOpen(false);
+        })();
+
+        // 监听 ESC：先关移动菜单，再关模态窗口
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
+            if (e.key !== 'Escape') return;
+            if (indexMobileNav.isOpen()) {
+                indexMobileNav.close();
+                return;
+            }
+            closeModal();
         });
     </script>
 
